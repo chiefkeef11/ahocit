@@ -1,11 +1,16 @@
 const express = require("express");
 const path = require("path");
+const cors = require("cors");
 const { Pool } = require("pg");
+
 require("dotenv").config();
 
 const app = express();
 
+app.use(cors());
+
 app.use(express.json());
+
 app.use(express.static(path.join(__dirname, "public")));
 
 const pool = new Pool({
@@ -13,7 +18,10 @@ const pool = new Pool({
   port: Number(process.env.DB_PORT),
   database: process.env.DB_NAME,
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD
+  password: process.env.DB_PASSWORD,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 app.get("/", (req, res) => {
@@ -324,6 +332,8 @@ app.post("/api/feedback", async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log("Сайт открыт: http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Сайт открыт на порту ${PORT}`);
 });
