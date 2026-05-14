@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Подача заявок в АХО</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="images/1.jpg" />
+</head>
+<body>
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-modal">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="loginTabBtn" type="button">Вход</button>
+        <button class="auth-tab" id="registerTabBtn" type="button">Регистрация</button>
+      </div>
+
+      <div class="auth-body">
+        <div id="loginBlock">
+          <h2>Авторизация</h2>
+          <input type="text" id="loginUsername" placeholder="Логин" />
+          <input type="password" id="loginPassword" placeholder="Пароль" />
+          <button class="auth-submit" id="loginBtn" type="button">Войти</button>
+          <p class="hint">АХО: логин <b>aho</b>, пароль <b>123</b></p>
+          <p class="auth-text" id="loginMessage"></p>
+        </div>
+
+        <div id="registerBlock" class="hidden">
+          <h2>Регистрация</h2>
+          <input type="text" id="registerName" placeholder="ФИО" />
+          <input type="text" id="registerUsername" placeholder="Логин" />
+          <input type="password" id="registerPassword" placeholder="Пароль" />
+          <button class="auth-submit" id="registerBtn" type="button">Зарегистрироваться</button>
+          <p class="auth-text" id="registerMessage"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page locked" id="mainPage">
+    <header class="topbar">
+      <div class="logo-title">
+        <img src="images/logo.png" alt="Логотип системы заявок АХО" class="site-logo" />
+      </div>
+
+      <nav class="topbar-nav">
+        <a href="#create-request" class="employee-link">Создать заявку</a>
+        <a href="#requests" class="employee-link">Мои заявки</a>
+        <a href="#aho-panel" class="aho-link hidden">Панель АХО</a>
+        <a href="#analytics" class="aho-link hidden">Аналитика</a>
+        <a href="#feedback">Обратная связь</a>
+      </nav>
+
+      <div class="user-box">
+        <div class="user-avatar">👤</div>
+        <span id="currentUserName">Пользователь</span>
+        <button class="logout-btn" id="logoutBtn" type="button">Выйти</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <section class="hero">
+        <div class="hero-image">
+          <div class="illustration">
+            <div class="circle-bg"></div>
+            <div class="monitor"></div>
+            <div class="paper"></div>
+            <div class="tool tool-1"></div>
+            <div class="tool tool-2"></div>
+            <div class="box"></div>
+            <div class="leaf leaf-1"></div>
+            <div class="leaf leaf-2"></div>
+          </div>
+        </div>
+
+        <div class="hero-text">
+          <h1>Подача заявок в АХО</h1>
+          <p>
+            Быстро и удобно отправляйте заявки на административно-хозяйственное обслуживание
+            и отслеживайте их выполнение.
+          </p>
+          <button class="green-btn employee-action" id="scrollToForm" type="button">Создать заявку</button>
+        </div>
+      </section>
+
+      <section class="section-block employee-section" id="create-request">
+        <h2>Создание заявки</h2>
+
+        <div class="download-box">
+          <div>
+            <h3>Перечень услуг и товаров</h3>
+            <p>
+              Перед созданием заявки можно скачать Excel-файл с перечнем доступных
+              услуг, канцтоваров и хозяйственных товаров.
+            </p>
+          </div>
+          <a href="files/services.xlsx" download class="blue-btn download-link">
+            Скачать Excel
+          </a>
+        </div>
+
+        <form class="request-form" id="requestForm">
+          <div class="form-row">
+            <label for="requestType">Тип заявки</label>
+            <select id="requestType" required>
+              <option value="">Выберите тип заявки</option>
+              <option value="Ремонт">Ремонт</option>
+              <option value="Заявка на уборку">Заявка на уборку</option>
+              <option value="Канцтовары">Канцтовары</option>
+              <option value="Хозтовары">Хозтовары</option>
+              <option value="Другое">Другое</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label for="department">Подразделение</label>
+            <input type="text" id="department" placeholder="Например: ЦИТ" required />
+          </div>
+
+          <div class="form-row">
+            <label for="office">Кабинет</label>
+            <input type="text" id="office" placeholder="Например: 305" required />
+          </div>
+
+          <div class="form-row form-row-top">
+            <label for="requestDescription">Описание проблемы</label>
+            <textarea id="requestDescription" placeholder="Введите описание проблемы..." required></textarea>
+          </div>
+
+          <div class="form-row">
+            <label for="requestPriority">Приоритет</label>
+            <select id="requestPriority" required>
+              <option value="">Выберите приоритет</option>
+              <option value="Высокий">Высокий</option>
+              <option value="Средний">Средний</option>
+              <option value="Низкий">Низкий</option>
+            </select>
+          </div>
+
+          <div class="form-actions">
+            <div class="file-upload-wrap">
+              <label class="file-btn">
+                <input type="file" id="requestFile" />
+                <span>📎 Добавить файл</span>
+              </label>
+
+              <span class="file-name" id="fileNameText">Файл не выбран</span>
+            </div>
+
+            <button type="submit" class="submit-btn">Отправить заявку</button>
+          </div>
+
+          <div class="form-message" id="formMessage"></div>
+        </form>
+      </section>
+
+      <section class="section-block employee-section" id="requests">
+        <h2>Мои заявки</h2>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Тип</th>
+                <th>Кабинет</th>
+                <th>Описание</th>
+                <th>Приоритет</th>
+                <th>Файл</th>
+                <th>Статус</th>
+                <th>Дата</th>
+                <th>Комментарий АХО</th>
+              </tr>
+            </thead>
+            <tbody id="requestsTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section-block aho-section hidden" id="aho-panel">
+        <h2>Панель отдела АХО</h2>
+        <p class="section-description">
+          В данном разделе сотрудник АХО просматривает все поступившие заявки,
+          изменяет их статус и добавляет комментарий по результатам обработки.
+        </p>
+
+        <div class="table-actions">
+          <button class="blue-btn" id="exportCsvBtn" type="button">Экспорт в Excel (CSV)</button>
+          <button class="blue-btn" id="printReportBtn" type="button">Экспорт в PDF</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Сотрудник</th>
+                <th>Тип</th>
+                <th>Кабинет</th>
+                <th>Описание</th>
+                <th>Приоритет</th>
+                <th>Файл</th>
+                <th>Статус</th>
+                <th>Комментарий</th>
+                <th>Действие</th>
+              </tr>
+            </thead>
+            <tbody id="ahoRequestsTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section-block aho-section hidden" id="analytics">
+        <h2>Аналитика и отчёты</h2>
+
+        <div class="analytics-grid">
+          <div class="analytics-card">
+            <span id="totalRequests">0</span>
+            <p>Всего заявок</p>
+          </div>
+          <div class="analytics-card">
+            <span id="newRequests">0</span>
+            <p>Новые</p>
+          </div>
+          <div class="analytics-card">
+            <span id="workRequests">0</span>
+            <p>В работе</p>
+          </div>
+          <div class="analytics-card">
+            <span id="doneRequests">0</span>
+            <p>Выполнено</p>
+          </div>
+          <div class="analytics-card">
+            <span id="cancelRequests">0</span>
+            <p>Отклонено</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-block" id="feedback">
+        <h2>Обратная связь</h2>
+        <p class="section-description">
+          Здесь сотрудник может оставить предложение или замечание по работе системы.
+        </p>
+
+        <form class="request-form" id="feedbackForm">
+          <div class="form-row form-row-top">
+            <label for="feedbackText">Сообщение</label>
+            <textarea id="feedbackText" placeholder="Введите сообщение..." required></textarea>
+          </div>
+
+          <div class="form-actions">
+            <span></span>
+            <button type="submit" class="submit-btn">Отправить</button>
+          </div>
+
+          <div class="form-message" id="feedbackMessage"></div>
+        </form>
+      </section>
+
+      <section class="info-cards">
+        <div class="info-card">
+          <div class="info-header">
+            <div class="info-icon">💬</div>
+            <h3>Инструкции</h3>
+          </div>
+          <p>Заполните форму, укажите кабинет, проблему и приоритет заявки.</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-header">
+            <div class="info-icon">?</div>
+            <h3>Частые вопросы</h3>
+          </div>
+          <p>Статус заявки можно отслеживать в разделе «Мои заявки».</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-header">
+            <div class="info-icon">📞</div>
+            <h3>Контакты</h3>
+          </div>
+          <p>+7 (49) 123-45-67</p>
+          <p>aho_support@company.ru</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
