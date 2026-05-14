@@ -28,6 +28,8 @@ const printReportBtn = document.getElementById("printReportBtn");
 const requestFileInput = document.getElementById("requestFile");
 const fileNameText = document.getElementById("fileNameText");
 
+const API_URL = "https://ahocit.onrender.com";
+
 function getCurrentUser() {
   return JSON.parse(localStorage.getItem("currentUser")) || null;
 }
@@ -125,7 +127,7 @@ async function registerUser() {
   }
 
   try {
-    const response = await fetch("/api/register", {
+    const response = await fetch(`${API_URL}/api/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -169,7 +171,7 @@ async function loginUser() {
   }
 
   try {
-    const response = await fetch("/api/login", {
+    const response = await fetch(`${API_URL}/api/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -200,7 +202,7 @@ async function loadRequests() {
 
   try {
     const response = await fetch(
-      `/api/requests?user_id=${user.id}&role=${user.role}`
+      `${API_URL}/api/requests?user_id=${user.id}&role=${user.role}`
     );
 
     const requests = await response.json();
@@ -334,7 +336,7 @@ async function updateRequestByAho(id) {
   if (!statusElement || !commentElement) return;
 
   try {
-    const response = await fetch(`/api/requests/${id}`, {
+    const response = await fetch(`${API_URL}/api/requests/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
@@ -390,7 +392,7 @@ async function createRequest(event) {
   const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : null;
 
   try {
-    const response = await fetch("/api/requests", {
+    const response = await fetch(`${API_URL}/api/requests`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -445,7 +447,7 @@ async function sendFeedback(event) {
   }
 
   try {
-    const response = await fetch("/api/feedback", {
+    const response = await fetch(`${API_URL}/api/feedback`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -477,7 +479,7 @@ function exportToCsv() {
   const user = getCurrentUser();
   if (!user || user.role !== "aho") return;
 
-  fetch(`/api/requests?user_id=${user.id}&role=${user.role}`)
+  fetch(`${API_URL}/api/requests?user_id=${user.id}&role=${user.role}`)
     .then((response) => response.json())
     .then((requests) => {
       const rows = [
