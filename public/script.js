@@ -406,16 +406,24 @@ function renderAnalytics(requests) {
 }
 
 function drawRequestsChart(requests) {
+
   if (!requestsChart) return;
 
   const ctx = requestsChart.getContext("2d");
+
   const width = requestsChart.width;
   const height = requestsChart.height;
 
   ctx.clearRect(0, 0, width, height);
 
-  const doneCount = requests.filter((item) => item.status === "Выполнено").length;
-  const notDoneCount = requests.filter((item) => item.status !== "Выполнено").length;
+  const doneCount = requests.filter(
+    (item) => item.status === "Выполнено"
+  ).length;
+
+  const notDoneCount = requests.filter(
+    (item) => item.status !== "Выполнено"
+  ).length;
+
   const total = Math.max(doneCount + notDoneCount, 1);
 
   const data = [
@@ -432,35 +440,88 @@ function drawRequestsChart(requests) {
   ];
 
   const padding = 42;
+
   const chartWidth = width - padding * 2;
+
   const maxValue = Math.max(doneCount, notDoneCount, 1);
+
   const barHeight = 54;
+
   const startY = 82;
-  const gap = 52;
+
+  const gap = 70;
 
   ctx.font = "16px Segoe UI, Arial";
+
   ctx.fillStyle = "#324968";
-  ctx.fillText("Выполненные и невыполненные заявки", padding, 28);
+
+  ctx.fillText(
+    "Выполненные и невыполненные заявки",
+    padding,
+    28
+  );
 
   data.forEach((item, index) => {
+
     const y = startY + index * (barHeight + gap);
-    const barWidth = (item.value / maxValue) * chartWidth;
-    const percent = Math.round((item.value / total) * 100);
+
+    const barWidth =
+      (item.value / maxValue) * chartWidth;
+
+    const percent = Math.round(
+      (item.value / total) * 100
+    );
+
+    ctx.fillStyle = "#000000";
+
+    ctx.font = "16px Segoe UI";
+
+    ctx.fillText(
+      item.label.toLowerCase() + ":",
+      padding,
+      y - 12
+    );
 
     ctx.fillStyle = "#eef3f8";
-    ctx.fillRect(padding, y, chartWidth, barHeight);
+
+    ctx.fillRect(
+      padding,
+      y,
+      chartWidth,
+      barHeight
+    );
 
     ctx.fillStyle = item.color;
-    ctx.fillRect(padding, y, barWidth, barHeight);
 
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "700 14px Segoe UI, Arial";
-    ctx.fillText(`${item.label}: ${item.value}`, padding + 14, y + 34);
+    ctx.fillRect(
+      padding,
+      y,
+      barWidth,
+      barHeight
+    );
+
+    ctx.fillStyle = "#000000";
+
+    ctx.font = "700 15px Segoe UI";
+
+    ctx.fillText(
+      `${item.value} `,
+      8,
+      y + 34
+    );
 
     ctx.fillStyle = "#2f3d4f";
+
     ctx.font = "700 14px Segoe UI, Arial";
-    ctx.fillText(`${percent}%`, padding + chartWidth + 14, y + 34);
+
+    ctx.fillText(
+      `${percent}%`,
+      padding + chartWidth + 14,
+      y + 34
+    );
+
   });
+
 }
 
 async function updateRequestByAho(id) {
