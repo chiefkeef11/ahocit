@@ -8,6 +8,11 @@ const { Pool } = require("pg");
 require("dotenv").config();
 
 const app = express();
+const uploadsDir = path.join(__dirname, "uploads");
+
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
 
 app.use(cors());
 
@@ -21,7 +26,7 @@ app.use(
 );
 
 const storage = multer.diskStorage({
-  destination: "uploads/",
+  destination: uploadsDir,
 
   filename: (req, file, cb) => {
     cb(
