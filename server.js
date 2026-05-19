@@ -180,14 +180,21 @@ app.post(
 
     try {
 
-      const {
-        user_id,
-        type,
-        department,
-        office,
-        description,
-        priority
-      } = req.body;
+      const user_id = req.body?.user_id;
+
+      const type = req.body?.type;
+
+      const department = req.body?.department;
+
+      const office = req.body?.office;
+
+      const description = req.body?.description;
+
+      const priority = req.body?.priority;
+
+      console.log(req.body);
+
+      console.log(req.file);
 
       const file_name = req.file
         ? req.file.filename
