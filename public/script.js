@@ -328,13 +328,7 @@ function renderAhoRequests(requests, user) {
   if (visibleRequests.length === 0) {
     ahoTable.innerHTML = `
       <tr>
-        <td>
-  ${
-    request.file_name
-      ? `<a href="${API_URL}/uploads/${request.file_name}" target="_blank">${request.file_name}</a>`
-      : "—"
-  }
-</td>
+        <td colspan="10">Заявки не найдены.</td>
       </tr>
     `;
     return;
@@ -590,26 +584,24 @@ async function createRequest(event) {
     return;
   }
 
-  const formData = new FormData();
+  const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : null;
 
-formData.append("user_id", user.id);
-formData.append("type", type);
-formData.append("department", department);
-formData.append("office", office);
-formData.append("description", description);
-formData.append("priority", priority);
-
-if (fileInput.files.length > 0) {
-  formData.append("file", fileInput.files[0]);
-}
-
-try {
-
-  const response = await fetch(`${API_URL}/api/requests`, {
-    method: "POST",
-    body: formData
-  });
-
+  try {
+    const response = await fetch(`${API_URL}/api/requests`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        user_id: user.id,
+        type,
+        department,
+        office,
+        description,
+        priority,
+        file_name: fileName
+      })
+    });
 
     const data = await response.json();
 
@@ -619,7 +611,7 @@ try {
     }
 
     messageBox.textContent = data.message || "Заявка успешно создана.";
-    requestForm.reset();
+    form.reset();
 
     if (fileNameText) {
       fileNameText.textContent = "Файл не выбран";
