@@ -47,6 +47,7 @@
         <a href="#requests" class="employee-link">Мои заявки</a>
         <a href="#aho-panel" class="aho-link hidden">Панель АХО</a>
         <a href="#analytics" class="aho-link hidden">Аналитика</a>
+        <a href="#feedback-list" class="aho-link hidden">Отзывы</a>
         <a href="#feedback">Обратная связь</a>
       </nav>
 
@@ -183,8 +184,28 @@
           изменяет их статус и добавляет комментарий по результатам обработки.
         </p>
 
+        <div class="filter-panel">
+          <div class="filter-item">
+            <label for="requestSearchInput">Поиск по заявкам</label>
+            <input type="text" id="requestSearchInput" placeholder="Сотрудник, тип, кабинет, описание..." />
+          </div>
+
+          <div class="filter-item">
+            <label for="requestStatusFilter">Фильтр заявок</label>
+            <select id="requestStatusFilter">
+              <option value="all">Все заявки</option>
+              <option value="done">Готовые</option>
+              <option value="not_done">Не готовые</option>
+              <option value="Новая">Новые</option>
+              <option value="В работе">В работе</option>
+              <option value="Отклонено">Отклонённые</option>
+            </select>
+          </div>
+        </div>
+
         <div class="table-actions">
-          <button class="blue-btn" id="exportCsvBtn" type="button">Экспорт в Excel (CSV)</button>
+          <button class="blue-btn" id="exportCsvBtn" type="button">Экспорт заявок в Excel (CSV)</button>
+          <button class="blue-btn" id="exportServicesCsvBtn" type="button">Экспорт услуг в Excel (CSV)</button>
           <button class="blue-btn" id="printReportBtn" type="button">Экспорт в PDF</button>
         </div>
 
@@ -212,6 +233,17 @@
       <section class="section-block aho-section hidden" id="analytics">
         <h2>Аналитика и отчёты</h2>
 
+        <div class="filter-panel analytics-filter">
+          <div class="filter-item">
+            <label for="analyticsStatusFilter">Фильтр аналитики</label>
+            <select id="analyticsStatusFilter">
+              <option value="all">Все заявки</option>
+              <option value="done">Готовые</option>
+              <option value="not_done">Не готовые</option>
+            </select>
+          </div>
+        </div>
+
         <div class="analytics-grid">
           <div class="analytics-card">
             <span id="totalRequests">0</span>
@@ -233,6 +265,42 @@
             <span id="cancelRequests">0</span>
             <p>Отклонено</p>
           </div>
+        </div>
+      </section>
+
+      <section class="section-block aho-section hidden" id="feedback-list">
+        <h2>Отзывы пользователей</h2>
+        <p class="section-description">
+          В данном разделе отображаются сообщения обратной связи от сотрудников, а также диаграмма количества отзывов.
+        </p>
+
+        <div class="analytics-grid feedback-summary">
+          <div class="analytics-card">
+            <span id="totalFeedback">0</span>
+            <p>Всего отзывов</p>
+          </div>
+          <div class="analytics-card">
+            <span id="todayFeedback">0</span>
+            <p>Отзывы сегодня</p>
+          </div>
+        </div>
+
+        <div class="chart-box">
+          <canvas id="feedbackChart" width="900" height="260"></canvas>
+        </div>
+
+        <div class="table-wrap feedback-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Сотрудник</th>
+                <th>Сообщение</th>
+                <th>Дата</th>
+              </tr>
+            </thead>
+            <tbody id="feedbackTable"></tbody>
+          </table>
         </div>
       </section>
 

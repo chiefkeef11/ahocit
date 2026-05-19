@@ -298,6 +298,34 @@ app.put("/api/requests/:id", async (req, res) => {
   }
 });
 
+app.get("/api/feedback", async (req, res) => {
+  try {
+
+    const result = await pool.query(`
+      SELECT
+        feedback.id,
+        feedback.user_id,
+        feedback.message,
+        feedback.created_at,
+        users.full_name AS user_name
+      FROM feedback
+      LEFT JOIN users
+      ON users.id = feedback.user_id
+      ORDER BY feedback.id DESC
+    `);
+
+    res.json(result.rows);
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      error: "Ошибка получения отзывов"
+    });
+  }
+});
+
 app.post("/api/feedback", async (req, res) => {
   try {
 
