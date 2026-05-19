@@ -405,7 +405,6 @@ function renderAnalytics(requests) {
   drawRequestsChart(requests);
 }
 
-
 function drawRequestsChart(requests) {
   if (!requestsChart) return;
 
@@ -697,34 +696,39 @@ function drawFeedbackChart(feedback) {
   });
 
   const maxCount = Math.max(...counts, 1);
-  const padding = 34;
-  const chartWidth = width - padding * 2;
-  const chartHeight = height - padding * 2;
-  const barGap = 16;
+  const paddingLeft = 42;
+  const paddingRight = 42;
+  const paddingTop = 42;
+  const paddingBottom = 42;
+  const chartWidth = width - paddingLeft - paddingRight;
+  const chartHeight = height - paddingTop - paddingBottom;
+  const barGap = 18;
   const barWidth = (chartWidth - barGap * (dates.length - 1)) / dates.length;
 
   ctx.font = "12px Segoe UI, Arial";
   ctx.fillStyle = "#52657f";
-  ctx.fillText("Диаграмма отзывов за последние 7 дней", padding, 18);
+  ctx.fillText("Диаграмма отзывов за последние 7 дней", paddingLeft, 22);
 
   dates.forEach((date, index) => {
-    const barHeight = (counts[index] / maxCount) * (chartHeight - 30);
-    const x = padding + index * (barWidth + barGap);
-    const y = height - padding - barHeight;
+    const barHeight = (counts[index] / maxCount) * (chartHeight - 35);
+    const x = paddingLeft + index * (barWidth + barGap);
+    const y = height - paddingBottom - barHeight;
 
     ctx.fillStyle = "#2f7fd2";
     ctx.fillRect(x, y, barWidth, barHeight);
 
     ctx.fillStyle = "#2f3d4f";
-    ctx.fillText(String(counts[index]), x + barWidth / 2 - 4, y - 6);
+    ctx.font = "700 12px Segoe UI, Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(String(counts[index]), x + barWidth / 2, y - 8);
 
     ctx.fillStyle = "#53657d";
-    ctx.save();
-    ctx.translate(x + 4, height - 10);
-    ctx.rotate(-0.45);
-    ctx.fillText(date.slice(0, 5), 0, 0);
-    ctx.restore();
+    ctx.font = "12px Segoe UI, Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(date.slice(0, 5), x + barWidth / 2, height - 14);
   });
+
+  ctx.textAlign = "left";
 }
 
 function exportToCsv() {
@@ -834,7 +838,6 @@ if (printReportBtn) {
     window.print();
   });
 }
-
 
 if (requestSearchInput) {
   requestSearchInput.addEventListener("input", () => {
