@@ -896,7 +896,73 @@ if (exportCsvBtn) {
 
 if (printReportBtn) {
   printReportBtn.addEventListener("click", () => {
-    window.print();
+    const tableBlock = document.querySelector("#aho-panel .table-wrap");
+
+    if (!tableBlock) {
+      alert("Таблица заявок не найдена.");
+      return;
+    }
+
+    const printWindow = window.open("", "_blank");
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html lang="ru">
+      <head>
+        <meta charset="UTF-8">
+        <title>Отчёт по заявкам АХО</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            color: #2f3d4f;
+          }
+
+          h1 {
+            font-size: 20px;
+            margin-bottom: 20px;
+          }
+
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+
+          th, td {
+            border: 1px solid #d7dde6;
+            padding: 8px;
+            font-size: 12px;
+            text-align: left;
+            vertical-align: top;
+          }
+
+          th {
+            background: #eef3f8;
+          }
+
+          select,
+          textarea,
+          button {
+            display: none;
+          }
+
+          @media print {
+            body {
+              padding: 10px;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <h1>Отчёт по заявкам АХО</h1>
+        ${tableBlock.outerHTML}
+      </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
   });
 }
 
