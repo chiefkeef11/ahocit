@@ -307,11 +307,11 @@ app.get("/api/feedback", async (req, res) => {
         feedback.user_id,
         feedback.message,
         feedback.created_at,
-        users.full_name AS user_name
+        COALESCE(users.full_name, 'Неизвестный пользователь') AS user_name
       FROM feedback
       LEFT JOIN users
       ON users.id = feedback.user_id
-      ORDER BY feedback.id DESC
+      ORDER BY feedback.created_at DESC, feedback.id DESC
     `);
 
     res.json(result.rows);

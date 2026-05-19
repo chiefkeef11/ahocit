@@ -90,6 +90,7 @@ function showRoleInterface(user) {
   const employeeLinks = document.querySelectorAll(".employee-link");
   const ahoLinks = document.querySelectorAll(".aho-link");
   const employeeActions = document.querySelectorAll(".employee-action");
+  const feedbackSection = document.getElementById("feedback");
 
   if (user.role === "aho") {
     employeeSections.forEach((item) => item.classList.add("hidden"));
@@ -97,12 +98,20 @@ function showRoleInterface(user) {
     employeeActions.forEach((item) => item.classList.add("hidden"));
     ahoSections.forEach((item) => item.classList.remove("hidden"));
     ahoLinks.forEach((item) => item.classList.remove("hidden"));
+
+    if (feedbackSection) {
+      feedbackSection.classList.add("hidden");
+    }
   } else {
     employeeSections.forEach((item) => item.classList.remove("hidden"));
     employeeLinks.forEach((item) => item.classList.remove("hidden"));
     employeeActions.forEach((item) => item.classList.remove("hidden"));
     ahoSections.forEach((item) => item.classList.add("hidden"));
     ahoLinks.forEach((item) => item.classList.add("hidden"));
+
+    if (feedbackSection) {
+      feedbackSection.classList.remove("hidden");
+    }
   }
 }
 
@@ -615,8 +624,8 @@ async function loadFeedback() {
       return;
     }
 
-    allFeedback = feedback;
-    renderFeedback(feedback);
+    allFeedback = Array.isArray(feedback) ? feedback : [];
+    renderFeedback(allFeedback);
   } catch (error) {
     console.error("Ошибка загрузки отзывов:", error);
   }
