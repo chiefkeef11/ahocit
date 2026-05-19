@@ -619,7 +619,7 @@ try {
     }
 
     messageBox.textContent = data.message || "Заявка успешно создана.";
-    form.reset();
+    requestForm.reset();
 
     if (fileNameText) {
       fileNameText.textContent = "Файл не выбран";
