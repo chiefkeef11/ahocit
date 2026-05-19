@@ -222,7 +222,7 @@ app.get("/api/requests", async (req, res) => {
           requests.*,
           users.full_name AS user_name
         FROM requests
-        JOIN users
+        LEFT JOIN users
         ON users.id = requests.user_id
         ORDER BY requests.id DESC
       `);
@@ -235,7 +235,7 @@ app.get("/api/requests", async (req, res) => {
           requests.*,
           users.full_name AS user_name
         FROM requests
-        JOIN users
+        LEFT JOIN users
         ON users.id = requests.user_id
         WHERE requests.user_id = $1
         ORDER BY requests.id DESC
@@ -307,11 +307,11 @@ app.get("/api/feedback", async (req, res) => {
         feedback.user_id,
         feedback.message,
         feedback.created_at,
-        COALESCE(users.full_name, 'Неизвестный пользователь') AS user_name
+        COALESCE(users.full_name, 'Пользователь') AS user_name
       FROM feedback
       LEFT JOIN users
       ON users.id = feedback.user_id
-      ORDER BY feedback.created_at DESC, feedback.id DESC
+      ORDER BY feedback.id DESC
     `);
 
     res.json(result.rows);
