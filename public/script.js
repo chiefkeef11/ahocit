@@ -328,7 +328,13 @@ function renderAhoRequests(requests, user) {
   if (visibleRequests.length === 0) {
     ahoTable.innerHTML = `
       <tr>
-        <td colspan="10">Заявки не найдены.</td>
+        <td>
+  ${
+    request.file_name
+      ? `<a href="${API_URL}/uploads/${request.file_name}" target="_blank">${request.file_name}</a>`
+      : "—"
+  }
+</td>
       </tr>
     `;
     return;
@@ -584,24 +590,27 @@ async function createRequest(event) {
     return;
   }
 
-  const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : null;
+  const formData = new FormData();
 
-  try {
-    const response = await fetch(`${API_URL}/api/requests`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        user_id: user.id,
-        type,
-        department,
-        office,
-        description,
-        priority,
-        file_name: fileName
-      })
-    });
+formData.append("user_id", user.id);
+formData.append("type", type);
+formData.append("department", department);
+formData.append("office", office);
+formData.append("description", description);
+formData.append("priority", priority);
+
+if (fileInput.files.length > 0) {
+  formData.append("file", fileInput.files[0]);
+}
+
+try {
+
+  const response = await fetch(`${API_URL}/api/requests`, {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await response.json();
 
     const data = await response.json();
 

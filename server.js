@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
+const multer = require("multer");
 const { Pool } = require("pg");
 
 require("dotenv").config();
@@ -12,6 +13,24 @@ app.use(cors());
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
+
+const storage = multer.diskStorage({
+  destination: "uploads/",
+
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      Date.now() + "-" + file.originalname
+    );
+  }
+});
+
+const upload = multer({ storage });
 
 const pool = new Pool({
   host: process.env.DB_HOST,
@@ -25,7 +44,9 @@ const pool = new Pool({
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(
+    path.join(__dirname, "public", "index.html")
+  );
 });
 
 app.get("/api/health", async (req, res) => {
@@ -146,64 +167,72 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-app.post("/api/requests", async (req, res) => {
-  try {
+app.post(
+  "/api/requests",
+  upload.single("file"),
+  async (req, res) => {
 
-    const {
-      user_id,
-      type,
-      department,
-      office,
-      description,
-      priority,
-      file_name
-    } = req.body;
+    try {
 
-    const result = await pool.query(
-      `
-      INSERT INTO requests
-      (
+      const {
         user_id,
         type,
         department,
         office,
         description,
-        priority,
-        status,
-        file_name
-      )
-      VALUES
-      (
-        $1,$2,$3,$4,$5,$6,$7,$8
-      )
-      RETURNING *
-      `,
-      [
-        user_id,
-        type,
-        department,
-        office,
-        description,
-        priority,
-        "Новая",
-        file_name || null
-      ]
-    );
+        priority
+      } = req.body;
 
-    res.json({
-      message: "Заявка создана",
-      request: result.rows[0]
-    });
+      const file_name = req.file
+        ? req.file.filename
+        : null;
 
-  } catch (error) {
+      const result = await pool.query(
+        `
+        INSERT INTO requests
+        (
+          user_id,
+          type,
+          department,
+          office,
+          description,
+          priority,
+          status,
+          file_name
+        )
+        VALUES
+        (
+          $1,$2,$3,$4,$5,$6,$7,$8
+        )
+        RETURNING *
+        `,
+        [
+          user_id,
+          type,
+          department,
+          office,
+          description,
+          priority,
+          "Новая",
+          file_name
+        ]
+      );
 
-    console.error(error);
+      res.json({
+        message: "Заявка создана",
+        request: result.rows[0]
+      });
 
-    res.status(500).json({
-      error: "Ошибка создания заявки"
-    });
+    } catch (error) {
+
+      console.error(error);
+
+      res.status(500).json({
+        error: "Ошибка создания заявки"
+      });
+    }
   }
-});
+);
 
 app.get("/api/requests", async (req, res) => {
   try {
@@ -297,7 +326,6 @@ app.put("/api/requests/:id", async (req, res) => {
     });
   }
 });
-
 
 app.get("/api/feedback", async (req, res) => {
   try {
